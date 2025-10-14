@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: realtime-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: realtime-app
+  template:
+    metadata:
+      labels:
+        app: realtime-app
+    spec:
+      containers:
+        - name: realtime-app
+          image: srinu298/realtime-app:tomcat
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/realtime_db
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: sree!
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: realtime-app
+spec:
+  selector:
+    app: realtime-app
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: NodePort # or LoadBalancer if cloud

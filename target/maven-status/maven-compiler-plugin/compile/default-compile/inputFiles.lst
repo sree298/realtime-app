@@ -1,0 +1,5 @@
+/home/ubuntu/realtimeprojects/realtime-app/src/main/java/com/example/realtimeapp/RealtimeAppApplication.java
+/home/ubuntu/realtimeprojects/realtime-app/src/main/java/com/example/realtimeapp/controller/ApiController.java
+/home/ubuntu/realtimeprojects/realtime-app/src/main/java/com/example/realtimeapp/controller/UserController.java
+/home/ubuntu/realtimeprojects/realtime-app/src/main/java/com/example/realtimeapp/model/User.java
+/home/ubuntu/realtimeprojects/realtime-app/src/main/java/com/example/realtimeapp/repository/UserRepository.java
