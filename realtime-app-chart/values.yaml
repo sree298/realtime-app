@@ -1,0 +1,13 @@
+namespace: realtimehelm
+
+mysql:
+  image: mysql:8.0
+  rootPassword: sree!
+  database: realtime_db
+  storage: 1Gi
+
+app:
+  image: srinu298/realtime-app:latest
+  port: 8080
+  nodePort: 31266
+  replicaCount: 2
