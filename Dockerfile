@@ -1,14 +1,11 @@
-# Use a Tomcat image with Java 17+
-FROM tomcat:10.1-jdk17-temurin
+# Use lightweight Java 17 runtime
+FROM eclipse-temurin:17-jdk
 
-# Remove the default ROOT application
-RUN rm -rf /usr/local/tomcat/webapps/ROOT
+# Copy built JAR into the container
+COPY target/realtime-app.jar /app.jar
 
-# Copy your WAR file to the Tomcat webapps folder
-COPY target/realtime-app.war /usr/local/tomcat/webapps/ROOT.war
-
-# Expose port 8080
+# Expose the default Spring Boot port
 EXPOSE 8080
 
-# Start Tomcat
-CMD ["catalina.sh", "run"]
+# Run the app
+ENTRYPOINT ["java", "-jar", "/app.jar"]

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: realtime-app
+  namespace: realtime
 spec:
   replicas: 1
   selector:
@@ -14,7 +15,8 @@ spec:
     spec:
       containers:
         - name: realtime-app
-          image: srinu298/realtime-app:tomcat
+          image: srinu298/realtime-app:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env:
@@ -24,15 +26,29 @@ spec:
               value: root
             - name: SPRING_DATASOURCE_PASSWORD
               value: sree!
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: realtime-app
+  namespace: realtime
 spec:
   selector:
     app: realtime-app
+  type: NodePort
   ports:
     - port: 8080
       targetPort: 8080
-  type: NodePort # or LoadBalancer if cloud
+      nodePort: 31265
