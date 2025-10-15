@@ -7,7 +7,7 @@ mysql:
   storage: 1Gi
 
 app:
-  image: srinu298/realtime-app:latest
+  image: srinu298/realtime-app:4
   port: 8080
   nodePort: 31266
   replicaCount: 2
