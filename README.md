@@ -1,6 +1,6 @@
 # Realtime App
 
-A real-time web application built with **Spring Boot**, **MySQL**, and **Kubernetes**, containerized using **Docker** and deployed via **Helm**. This repository includes a CI/CD pipeline example using **Jenkins** and manifests to deploy to Kubernetes.
+A real-time web application built with **Spring Boot**, **MySQL**, and **Kubernetes**, containerized using **Docker** and deployed via **Helm**. This repository includes a CI/CD pipeline example using **Jenkins** and manifests to deploy to Kubernetes and workflow.
 
 ---
 
@@ -256,7 +256,236 @@ helm install realtime-app ./realtime-app-chart
 ## ✍️ License & Author
 
 **Author:** Srinivasa Rao  
-**License:** MIT
+**License:** 
 
 ---
+# 🧠 Realtime App
+
+A full-stack **Spring Boot + MySQL** backend application demonstrating real-time data management, containerization with **Docker**, and deployment on **Kubernetes**.
+
+---
+
+## 📘 Overview
+
+This project provides RESTful APIs to manage user data using **Spring Boot**, **Spring Data JPA**, and **MySQL**.
+It includes CI/CD automation through **Jenkins**, and ready-to-use manifests for **Kubernetes** deployment.
+
+---
+
+## ⚙️ Architecture Flow
+
+**Request → Controller → Repository → Database**
+
+1. **Client Request:** A user sends an HTTP request (e.g., POST `/api/users`).
+2. **DispatcherServlet:** Spring Boot routes the request to the correct controller.
+3. **Controller Layer:** `UserController` handles the request and calls the repository.
+4. **Repository Layer:** `UserRepository` (Spring Data JPA) saves data via Hibernate.
+5. **Database:** Data is persisted in MySQL.
+6. **Response:** The saved data is serialized and returned as JSON.
+
+### 📊 Sequence Diagram
+
+```
+Client --> Tomcat (Embedded)
+Tomcat --> DispatcherServlet
+DispatcherServlet --> UserController#createUser()
+UserController --> UserRepository.save()
+UserRepository --> Hibernate/JPA
+Hibernate --> MySQL (INSERT)
+MySQL --> Hibernate --> UserRepository --> Controller --> DispatcherServlet --> Client (JSON)
+```
+
+---
+
+## 🏗️ Project Structure
+
+```
+src/
+ └── main/java/com/example/realtimeapp/
+     ├── RealtimeAppApplication.java     # Main Spring Boot entry point
+     ├── controller/
+     │    ├── UserController.java        # API endpoints for user management
+     │    └── ApiController.java         # Health/root endpoints
+     ├── model/
+     │    └── User.java                  # JPA Entity
+     ├── repository/
+     │    └── UserRepository.java        # Data access layer
+resources/
+ └── application.properties              # DB & JPA configurations
+```
+
+---
+
+## 🚀 How the Application Starts
+
+1. `RealtimeAppApplication.main()` executes first.
+2. Spring Boot auto-configures components (DataSource, Repositories, Controllers).
+3. Embedded Tomcat starts on **port 8080**.
+4. App is ready to accept requests.
+
+---
+
+## 💾 API Endpoints
+
+| Method | Endpoint     | Description           |
+| ------ | ------------ | --------------------- |
+| GET    | `/api/users` | Retrieve all users    |
+| POST   | `/api/users` | Create new user       |
+| GET    | `/api`       | API root/health check |
+
+### Example Request
+
+```bash
+curl -X POST http://localhost:8080/api/users \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Srinivas", "email": "srinivas@example.com"}'
+```
+
+---
+
+## 🧩 Local Setup
+
+### Prerequisites
+
+* JDK 17+
+* Maven 3.8+
+* MySQL running locally or in Docker
+* (Optional) Docker & kubectl for deployment
+
+### Build & Run Locally
+
+```bash
+# Build
+mvn clean package -DskipTests
+
+# Run
+java -jar target/realtime-app.jar
+```
+
+App will be available at:
+👉 [http://localhost:8080/api](http://localhost:8080/api)
+
+---
+
+## 🐳 Docker Setup
+
+### Build Image
+
+```bash
+docker build -t <your-dockerhub-username>/realtime-app:latest .
+```
+
+### Run Container
+
+```bash
+docker run -p 8080:8080 \
+  -e SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/realtime_db \
+  -e SPRING_DATASOURCE_USERNAME=root \
+  -e SPRING_DATASOURCE_PASSWORD=sree! \
+  <your-dockerhub-username>/realtime-app:latest
+```
+
+---
+
+## ☸️ Kubernetes Deployment
+
+Kubernetes manifests are available in the `k8s/` directory.
+
+### Step-by-step Deployment
+
+```bash
+# Create Namespace
+kubectl create namespace realtime
+
+# Deploy MySQL
+kubectl apply -f k8s/mysql-deployment.yaml -n realtime
+
+# Deploy Application
+kubectl apply -f k8s/realtime-app-deployment.yaml -n realtime
+
+# Check Pods & Services
+kubectl get pods -n realtime
+kubectl get svc -n realtime
+```
+
+Access the application using NodePort service:
+
+```
+http://<node-ip>:31265/api
+```
+
+---
+
+## ⚙️ Jenkins CI/CD
+
+A `Jenkinsfile` is included for automated pipeline:
+
+1. Checkout source
+2. Build JAR using Maven
+3. Build & push Docker image (`IMAGE_NAME=srinu298/realtime-app`)
+4. Deploy to Kubernetes cluster
+
+Pipeline stages:
+
+```
+Build → Docker Build → Push → Deploy
+```
+
+---
+
+## 🗄️ Database Configuration
+
+Edit `src/main/resources/application.properties`:
+
+```properties
+spring.datasource.url=jdbc:mysql://mysql:3306/realtime_db
+spring.datasource.username=root
+spring.datasource.password=sree!
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+For Kubernetes, ensure:
+
+* MySQL Service name = `mysql`
+* Same namespace (`realtime`)
+* PVC attached for persistent storage
+
+---
+
+## 🧠 Key Technologies
+
+* **Spring Boot 3.x**
+* **Spring Data JPA (Hibernate)**
+* **MySQL 8**
+* **Docker**
+* **Jenkins**
+* **Kubernetes (YAML + Helm chart)**
+
+---
+
+## ✅ Health Check
+
+The application exposes Spring Actuator endpoints:
+
+```
+GET /actuator/health
+GET /actuator/info
+```
+
+You can configure readiness/liveness probes in K8s for production.
+
+---
+
+## 👨‍💻 Author
+
+**Srinivasa Rao P**
+📧 [srinivasarao2455@gmail.com](mailto:srinivas@example.com)
+🔗 [LinkedIn](#) • 
+
+---
+
+## 📄 License
+
+
 
