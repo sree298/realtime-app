@@ -261,7 +261,7 @@ helm install realtime-app ./realtime-app-chart
 ---
 # 🧠 Realtime App
 
-A full-stack **Spring Boot + MySQL** backend application demonstrating real-time data management, containerization with **Docker**, and deployment on **Kubernetes**.
+A full-stack **Spring Boot + MySQL** backend application demonstrating real-time data management, containerization with **Docker**, and deployment on **Kubernetes**. and **Project workflow**
 
 ---
 
