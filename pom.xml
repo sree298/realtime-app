@@ -23,6 +23,11 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Sonar properties (convenience - can be overridden on CLI or by Jenkinsfile) -->
+        <sonar.projectKey>realtime-app</sonar.projectKey>
+        <sonar.projectName>realtime-app</sonar.projectName>
+        <sonar.host.url>http://172.18.245.186:9001</sonar.host.url>
     </properties>
 
     <dependencies>
